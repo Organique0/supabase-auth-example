@@ -6,14 +6,18 @@ import { Button } from "./ui/button";
 import useAuthModal from "@/hooks/useAuthModal";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useUser } from "@/hooks/useUser";
+import { useEffect } from "react";
+import useSignUpModal from "@/hooks/useSignUpModal";
 interface AuthButtonProps {
     className?: string;
 }
 
 const AuthButton: React.FC<AuthButtonProps> = ({ className }) => {
-    const authModal = useAuthModal()
+    const authModal = useAuthModal();
+    const signUpModal = useSignUpModal();
     const supabaseClient = useSupabaseClient();
-    const { user } = useUser();
+    const { user, userDetails } = useUser();
+    const router = useRouter();
 
     const handleLogout = async () => {
         const { error } = await supabaseClient.auth.signOut();
