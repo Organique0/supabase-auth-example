@@ -1,6 +1,10 @@
+import SupabaseProvider from '@/providers/SupabaseProvider'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Open_Sans } from 'next/font/google'
+import ModalProvider from '@/providers/ModalProvider'
+import UserProvider from '@/providers/UserProvider'
+import { ThemeProvider } from '@/components/theme-provider'
 
 const sans = Open_Sans({ subsets: ['latin'] })
 
@@ -16,7 +20,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={sans.className}>{children}</body>
+      <body className={sans.className}>
+        <ThemeProvider attribute='class' defaultTheme='dark' enableSystem>
+          <SupabaseProvider>
+            <UserProvider>
+              <ModalProvider />
+              {children}
+            </UserProvider>
+          </SupabaseProvider>
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

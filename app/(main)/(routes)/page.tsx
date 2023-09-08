@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
+import AuthButton from "@/components/AuthButton";
 
 export default function Home() {
   return (
     <div className="">
-      <h1 className=''>Hello Next.js!</h1>
-      <Button>Click Me</Button>
+      <AuthButton />
     </div>
   )
 }
