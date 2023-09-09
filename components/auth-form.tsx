@@ -49,7 +49,7 @@ const AuthModal = () => {
         context?.updateUserDetails({
             name: `${values.firstName} ${values.lastName}`,
             userId: session?.user?.id as string,
-            imageUrl: "url",
+            imageUrl: session?.user.user_metadata.picture,
             email: session?.user?.email as string,
             id: session?.user?.id as string,
         });
