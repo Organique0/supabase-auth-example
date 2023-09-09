@@ -5,7 +5,7 @@ import { useSupabaseClient, useSessionContext, useUser } from "@supabase/auth-he
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import useAuthModal from "@/hooks/useAuthModal";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import useSignUpModal from "@/hooks/useSignUpModal";
 import { UserContext } from "@/hooks/useUser";
 import * as z from "zod"
@@ -55,18 +55,13 @@ const AuthModal = () => {
         });
         onCloseSignUp();
     }
-
     useEffect(() => {
-        if (session) {
-            router.refresh();
+        if (session && !context?.isLoading) {
             onClose();
-            if (context?.userDetails?.id == null) {
-                onOpenSignUp();
-            } else {
-                onCloseSignUp()
-            }
         }
-    }, [session, router, onClose, context?.userDetails, onOpenSignUp, onCloseSignUp]);
+    }, [session, onClose, context, onOpenSignUp, onCloseSignUp])
+
+
 
     const onChange = (open: boolean) => {
         if (!open) {
@@ -76,7 +71,7 @@ const AuthModal = () => {
     return (
         <>
             <Modal title="Welcome back" description="Login to your account" isOpen={isOpen} onChange={onChange}>
-                <Auth theme="dark" magicLink providers={["github", "google", "discord"]} supabaseClient={supabaseClient} appearance={{ theme: ThemeSupa, variables: { default: { colors: { brand: "#5865F2", brandAccent: "#5865F2" } } } }} />
+                <Auth theme="dark" providers={["github", "google", "discord"]} supabaseClient={supabaseClient} appearance={{ theme: ThemeSupa, variables: { default: { colors: { brand: "#5865F2", brandAccent: "#5865F2" } } } }} />
             </Modal>
             <Modal title="Register" description="Enter additional information" isOpen={isOpenSignUp} onChange={onChange}>
                 <Form {...form}>

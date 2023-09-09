@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { User } from "@supabase/auth-helpers-nextjs";
 import { useSessionContext, useUser as useSupaUser } from "@supabase/auth-helpers-react";
 import { db } from "@/lib/dbClient";
+import useSignUpModal from "./useSignUpModal";
 
 type UserContextType = {
     accessToken: string | null;
@@ -30,9 +31,9 @@ export const MyUserContextProvider = (props: Props) => {
     const accessToken = session?.access_token ?? null;
     const [isLoadingData, setIsLoadingData] = useState(false);
     const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
+    const { onOpenSignUp } = useSignUpModal();
 
     const getUserDetails = () => supabase.from('Profile').select('*').eq("userId", user?.id).single();
-
     useEffect(() => {
         if (user && !isLoadingData && !userDetails) {
             setIsLoadingData(true);
@@ -41,6 +42,9 @@ export const MyUserContextProvider = (props: Props) => {
 
                 if (userDetailsPromise.status === "fulfilled") {
                     setUserDetails(userDetailsPromise.value.data as UserDetails);
+                    if (!userDetailsPromise.value.data) {
+                        onOpenSignUp();
+                    }
                 }
 
                 setIsLoadingData(false);
